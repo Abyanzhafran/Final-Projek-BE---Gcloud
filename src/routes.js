@@ -1,38 +1,50 @@
+const { addNoteHandler, getAllNotesHandler, getNoteByIdHandler } = require("./handler");
+
 const routes = [
   {
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return 'Homepage';
-    },
-  },
-  {
-    method: '*',
-    path: '/',
-    handler: (request, h) => {
-      return 'Halaman tidak dapat diakses dengan method tersebut';
+    method: 'POST',
+    path: '/notes',
+    handler: addNoteHandler,
+    options: {
+      cors: {
+        origin: ['*'],
+      },
     },
   },
   {
     method: 'GET',
+    path: '/notes',
+    handler: getAllNotesHandler,
+  },
+  {
+    method: 'GET',
+    path: '/notes/{id}',
+    handler: getNoteByIdHandler,
+  },
+  // {
+  //   method: 'GET',
+  //   path: '/notes/{id}',
+  //   handler: () => { },
+  // },
+  {
+    method: '*',
+    path: '/',
+    handler: (request, h) => 'Halaman tidak dapat diakses dengan method tersebut',
+  },
+  {
+    method: 'GET',
     path: '/about',
-    handler: (request, h) => {
-      return 'About page';
-    },
+    handler: (request, h) => 'About page',
   },
   {
     method: '*',
     path: '/about',
-    handler: (request, h) => {
-      return 'Halaman tidak dapat diakses dengan method tersebut';
-    },
+    handler: (request, h) => 'Halaman tidak dapat diakses dengan method tersebut',
   },
   {
     method: '*',
     path: '/{any*}',
-    handler: (request, h) => {
-      return 'Halaman tidak ditemukan';
-    },
+    handler: (request, h) => 'Halaman tidak ditemukan',
   },
 ];
 
