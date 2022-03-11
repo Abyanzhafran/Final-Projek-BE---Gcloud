@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const books = require('./books');
 
-const addBookHandler = (req, h) => {
+const addBookHandler = (request, h) => {
   const {
     name,
     year,
@@ -11,7 +11,12 @@ const addBookHandler = (req, h) => {
     pageCount,
     readPage,
     reading,
-  } = req.payload
+  } = request.payload
+
+  const id = nanoid(16);
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
+  const finished = pageCount === readPage
 
   const newBook = {
     id,
@@ -30,7 +35,27 @@ const addBookHandler = (req, h) => {
 
   books.push(newBook)
 
-  const isSuccess = notes.filter((book) => book.id === id).length > 0;
+  const isName = name === null
+  const isReadPage = readPage > pageCount
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
+
+  if (isName) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku'
+    })
+    response.code(400);
+    return response;
+  }
+
+  if (isReadPage) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
+    })
+    response.code(400);
+    return response;
+  }
 
   if (isSuccess) {
     const response = h.response({
@@ -43,6 +68,7 @@ const addBookHandler = (req, h) => {
     response.code(201);
     return response;
   }
+
   const response = h.response({
     status: 'fail',
     message: 'Gagal menambahkan buku. Mohon isi nama buku',
@@ -51,6 +77,36 @@ const addBookHandler = (req, h) => {
   return response;
 }
 
+const getAllBooksHandler = () => ({
+  status: 'success',
+  data: {
+    books,
+  }
+})
+
+const getBookByIdHandler = (request, h) => {
+  const { id } = request.params;
+
+  const book = books.filter((n) => n.id === id);
+
+  if (book !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        book,
+      },
+    };
+  }
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+}
+
 module.exports = {
-  addBookHandler
+  addBookHandler,
+  getAllBooksHandler,
+  getBookByIdHandler
 }
