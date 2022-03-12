@@ -35,7 +35,7 @@ const addBookHandler = (request, h) => {
 
   books.push(newBook)
 
-  const isName = name === null
+  const isName = name === ""
   const isReadPage = readPage > pageCount
   const isSuccess = books.filter((book) => book.id === id).length > 0;
 
@@ -71,9 +71,9 @@ const addBookHandler = (request, h) => {
 
   const response = h.response({
     status: 'fail',
-    message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    message: 'Buku gagal ditambahkan',
   });
-  response.code(400);
+  response.code(500);
   return response;
 }
 
@@ -85,11 +85,13 @@ const getAllBooksHandler = () => {
       name: x.name,
       publisher: x.publisher
     }))
+    // const bookss = []
+    // bookss.push(books.map(x => (x.id, x.name, x.publisher)))
 
     return {
       status: 'success',
       data: {
-        bookss
+        books: bookss
       },
     }
   }
@@ -98,7 +100,9 @@ const getAllBooksHandler = () => {
 const getBookByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const book = books.filter(x => x.id === id);
+  const book = books.filter(x => x.id === id)[0];
+  // const entries = new Map([books])
+  // const book = { ...books }
 
   if (book == false) {
     const response = h.response({
@@ -134,7 +138,7 @@ const editBookByIdHandler = (request, h) => {
   } = request.payload
   const updatedAt = new Date().toISOString();
 
-  const isName = name === null
+  const isName = name === ""
   const isReadPage = readPage > pageCount
   const index = books.findIndex(book => book.id === id)
 
