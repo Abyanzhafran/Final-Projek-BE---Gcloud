@@ -101,10 +101,8 @@ const getBookByIdHandler = (request, h) => {
   const { id } = request.params;
 
   const book = books.filter(x => x.id === id)[0];
-  // const entries = new Map([books])
-  // const book = { ...books }
 
-  if (book == false) {
+  if (book == undefined) {
     const response = h.response({
       status: 'fail',
       message: 'Buku tidak ditemukan',
