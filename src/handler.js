@@ -130,13 +130,8 @@ const editBookByIdHandler = (request, h) => {
     readPage,
     reading,
   } = request.payload
-  const updatedAt = new Date().toISOString();
 
-  const isName = name === ""
-  const isReadPage = readPage > pageCount
-  const index = books.findIndex(book => book.id === id)
-
-  if (isName) {
+  if (!name || name === '') {
     const response = h.response({
       status: 'fail',
       message: 'Gagal memperbarui buku. Mohon isi nama buku'
@@ -145,7 +140,7 @@ const editBookByIdHandler = (request, h) => {
     return response;
   }
 
-  if (isReadPage) {
+  if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
@@ -153,6 +148,9 @@ const editBookByIdHandler = (request, h) => {
     response.code(400);
     return response;
   }
+
+  const updatedAt = new Date().toISOString();
+  const index = books.findIndex(book => book.id === id)
 
   if (index !== -1) {
     books[index] = {
