@@ -10,52 +10,27 @@ const routes = [
   {
     method: 'POST',
     path: '/books',
-    handler: addBookHandler,
-    options: {
-      cors: {
-        origin: ['*'],
-      },
-    },
+    handler: addBookHandler
   },
   {
     method: 'GET',
     path: '/books',
-    handler: getAllBooksHandler,
-    options: {
-      cors: {
-        origin: ['*'],
-      },
-    },
+    handler: getAllBooksHandler
   },
   {
     method: 'GET',
     path: '/books/{id}',
-    handler: getBookByIdHandler,
-    options: {
-      cors: {
-        origin: ['*'],
-      },
-    },
+    handler: getBookByIdHandler
   },
   {
     method: 'PUT',
     path: '/books/{id}',
-    handler: editBookByIdHandler,
-    options: {
-      cors: {
-        origin: ['*'],
-      },
-    },
+    handler: editBookByIdHandler
   },
   {
     method: 'DELETE',
     path: '/books/{id}',
-    handler: deleteBookByIdHandler,
-    options: {
-      cors: {
-        origin: ['*'],
-      },
-    },
+    handler: deleteBookByIdHandler
   },
   // default things
   {

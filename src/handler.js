@@ -53,7 +53,7 @@ const addBookHandler = (request, h) => {
 
   books.push(newBook)
 
-  const isSuccess = books.filter((book) => book.id === id).length > 0;
+  const isSuccess = books.filter((x) => x.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
@@ -75,23 +75,42 @@ const addBookHandler = (request, h) => {
   return response;
 }
 
-const getAllBooksHandler = () => {
+const getAllBooksHandler = (request, h) => {
+  const {
+    name,
+    reading,
+    finished
+  } = request.query;
 
-  if (books !== undefined) {
-    const bookss = books.map(x => ({
-      id: x.id,
-      name: x.name,
-      publisher: x.publisher
-    }))
+  let allFilteredBooks = books;
 
-    return {
-      status: 'success',
-      data: {
-        books: bookss
-      },
+  if (name)
+    allFilteredBooks = books.filter((x) => x.name.toLowerCase().includes(name.toLowerCase()));
+
+
+  if (reading)
+    allFilteredBooks = books.filter((x) => Number(x.reading) === Number(reading));
+
+
+  if (finished)
+    allFilteredBooks = books.filter((x) => Number(x.finished) === Number(finished));
+
+
+  const response = h.response({
+    status: 'success',
+    data: {
+      books: allFilteredBooks.map((x) => ({
+        id: x.id,
+        name: x.name,
+        publisher: x.publisher
+      }))
     }
-  }
-}
+  });
+
+  response.code(200);
+  return response;
+};
+
 
 const getBookByIdHandler = (request, h) => {
   const { id } = request.params;
@@ -150,7 +169,7 @@ const editBookByIdHandler = (request, h) => {
   }
 
   const updatedAt = new Date().toISOString();
-  const index = books.findIndex(book => book.id === id)
+  const index = books.findIndex(x => x.id === id)
 
   if (index !== -1) {
     books[index] = {
@@ -185,7 +204,7 @@ const editBookByIdHandler = (request, h) => {
 const deleteBookByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const index = books.findIndex(book => book.id === id);
+  const index = books.findIndex(x => x.id === id);
 
   if (index !== -1) {
     books.splice(index, 1);
